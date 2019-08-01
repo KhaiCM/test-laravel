@@ -25,4 +25,9 @@ class HomeController extends Controller
     {
         return redirect()->route('setting.index');
     }
+
+    public function javascript()
+    {
+        return view('js_basic');
+    }
 }

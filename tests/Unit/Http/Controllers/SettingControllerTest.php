@@ -114,22 +114,22 @@ public function test_update_setting_success()
     $redirectResponse = $settingController->update($request, $id);
 }
 
-    public function test_delete_setting_success()
-    {
-        $request = new SettingRequest();
+    // public function test_delete_setting_success()
+    // {
+    //     $request = new SettingRequest();
 
-        $id = '1';
+    //     $id = '1';
 
-        $this->SettingRepoMock->shouldReceive('delete')
-        ->once()
-        ->andReturn(true);
+    //     $this->SettingRepoMock->shouldReceive('delete')
+    //     ->once()
+    //     ->andReturn(true);
 
-        $settingController = new settingController($this->SettingRepoMock);
-        $redirectResponse = $settingController->destroy($request, $id);
+    //     $settingController = new settingController($this->SettingRepoMock);
+    //     $redirectResponse = $settingController->destroy($request, $id);
 
-        $this->assertEquals(env('APP_URL'), $redirectResponse->headers->get('location'));
-        // dd($redirectResponse);
-        $this->assertEquals($redirectResponse->getSession()->get('success'), __('messages.success_delete_setting'));
-    }
+    //     $this->assertEquals(env('APP_URL'), $redirectResponse->headers->get('location'));
+    //     // dd($redirectResponse);
+    //     $this->assertEquals($redirectResponse->getSession()->get('success'), __('messages.success_delete_setting'));
+    // }
 
 }

@@ -2,16 +2,15 @@
 
 namespace App\Jobs;
 
-use Log;
 use Mail;
-use App\Mail\WelcomeEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use App\Mail\EmailTestQueue;
 
-class SendWelcomeEmail implements ShouldQueue
+class SendMailAllUser implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,8 +33,7 @@ class SendWelcomeEmail implements ShouldQueue
      */
     public function handle()
     {
-        $email = new WelcomeEmail($this->user);
+        $email = new EmailTestQueue($this->user);
         Mail::to($this->user->email)->send($email);
     }
 }
-// Log::debug($this->user);

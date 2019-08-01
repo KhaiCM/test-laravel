@@ -42,6 +42,7 @@ class MenuPolicy
      */
     public function create(User $user)
     {
+        dd(222222222222);
         return $user->hasPermission('create_menu');
     }
 

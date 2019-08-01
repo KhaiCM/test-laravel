@@ -17,3 +17,4 @@ yarn-error.log
 /upload/images
 /public/upload
 .idea
+.docker

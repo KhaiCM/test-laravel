@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Cache;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -15,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $listUser = User::all();
+        $listUser = User::orderBy('id', 'DESC')->get();
 
         return view('users.list_user', compact('listUser'));
     }
@@ -62,7 +64,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         // dd($user->role->first()->id);
-        $roleList = Role::all();
+
+        $roleList = Cache::remember('roles', 600, function(){
+            return \DB::table('roles')->get();
+        });
 
         return view('users.edit_role', compact('user', 'roleList'));
     }

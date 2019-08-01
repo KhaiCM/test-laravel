@@ -13,7 +13,7 @@
 
 Route::get('/', 'IndexController@index');
 
-Route::group(['prefix' => 'admin', 'middleware' => 'admin.login'], function () {
+Route::group(['prefix' => 'admin'], function () {
 
 	Route::resource('setting', 'SettingController');
 	Route::resource('social', 'SocialController');
@@ -26,8 +26,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.login'], function () {
 	Route::get('permission/create', 'RoleController@createPermission')->name('permission.create');
 	Route::post('permission/store', 'RoleController@storePermission')->name('permission.store');
 	Route::post('permission/set-permission', 'RoleController@setPermission')->name('permission.set_permission');
+
+	Route::get('queue', 'QueueController@queueMail')->name('email.queue');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+// , 'middleware' => 'admin.login'
+Route::get('js_basic', 'HomeController@javascript');

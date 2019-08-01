@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateSlideRequest;
 use App\Repo\SlideRepositoryInterface;
+use Cache;
 
 class SlideController extends Controller
 {
@@ -30,7 +31,10 @@ class SlideController extends Controller
      */
     public function index()
     {
-        $listSlide = Slide::all();
+        $listSlide = Cache::remember('slides', 600, function(){
+            return \DB::table('slides')->get();
+        });
+        // $listSlide = Slide::all();
         $compact = [
             'listSlide' => $listSlide,
         ];

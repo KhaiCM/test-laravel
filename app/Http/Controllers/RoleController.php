@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Repo\RoleRepository;
 use App\Models\User;
 use App\Models\Permission;
+use Cache;
 
 class RoleController extends Controller
 {
@@ -22,8 +23,10 @@ class RoleController extends Controller
 
     public function index()
     {
-        $roles = Role::all();
-
+        $roles = Cache::remember('roles', 600, function(){
+            return \DB::table('roles')->get();
+        });
+        
         return view('roles.index', compact('roles'));
     }
 

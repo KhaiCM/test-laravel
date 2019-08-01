@@ -63,12 +63,12 @@
 					</thead>
 					<tbody>
 						@isset($listUser)
-						@foreach($listUser as $item)
+						@foreach($listUser as $key => $item)
 						<tr class="text-center">
-							<td>{{ $item->id }}</td>
+							<td>{{ ++$key }}</td>
 							<td><p class="name"><a href="{{ route('users.edit', ['id' => $item->id]) }}">{{ $item->name }}</a></p></td>
 							<td>{{ $item->email }}</td>
-							<td>{{ $item->created_at }}</td>
+							<td>{{ $item->created_at->format('d/m/Y') }}</td>
 
 							<td>
 								<a href="{{ route('menu.edit', ['id' => $item->id]) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>

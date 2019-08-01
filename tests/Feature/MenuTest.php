@@ -16,7 +16,7 @@ class MenuTest extends TestCase
      *
      * @return void
      */
-    public function tes
+ 
     public function testExample()
     {
         $response = $this->get('/');
@@ -33,36 +33,36 @@ class MenuTest extends TestCase
         ->assertStatus(200);
     }
 
-    public function test_store_menu()
-    {
-        $data = [
-            'name' => 'menu creat',
-            'link' => 'swshwsdfhdf.com',
-            'type' => '1',
-            'order' => 4055,
-        ];
+    // public function test_store_menu()
+    // {
+    //     $data = [
+    //         'name' => 'menu creat',
+    //         'link' => 'swshwsdfhdf.com',
+    //         'type' => '1',
+    //         'order' => 4055,
+    //     ];
 
-        $user = factory(User::class)->create();
+    //     $user = factory(User::class)->create();
 
-        $this
-        ->actingAs($user)
-        ->post(route('menu.store'), $data)
-        ->assertStatus(302)
-        ->assertRedirect(route('menu.index'))
-        ->assertSessionHas('success', 'Create Menu Successful !');
-    }
+    //     $this
+    //     ->actingAs($user)
+    //     ->post(route('menu.store'), $data)
+    //     ->assertStatus(302)
+    //     ->assertRedirect(route('menu.index'))
+    //     ->assertSessionHas('success', 'Create Menu Successful !');
+    // }
 
-    public function test_create_invalid()
-    {
-        $data = [
-            'name' => '',
-        ];
+    // public function test_create_invalid()
+    // {
+    //     $data = [
+    //         'name' => '',
+    //     ];
 
-        $user = factory(User::class)->create();
-        $this
-        ->actingAs($user)
-        ->post(route('menu.store'), $data)
-        ->assertStatus(302);
-    }
+    //     $user = factory(User::class)->create();
+    //     $this
+    //     ->actingAs($user)
+    //     ->post(route('menu.store'), $data)
+    //     ->assertStatus(200);
+    // }
 
 }

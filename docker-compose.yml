@@ -1,41 +1,70 @@
 version: '2'
+
 services:
-  composer:
-    build:
-      context: ./.develop/build/composer
-      dockerfile: Composer_Dockerfile
-    volumes:
-      - ./:/var/www/html/moneylover
-    entrypoint: ['bash', '/var/www/html/moneylover/.develop/build/composer/composer.sh']
-  php-fpm:
-    build:
-      context: ./.develop/build/php-fpm
-      dockerfile: Php-fpm_Dockerfile
-    volumes:
-      - ./:/var/www/html/moneylover
-  nginx:
-    build:
-      context: ./.develop/build/nginx
-      dockerfile: Nginx_Dockerfile
-    volumes:
-      - ./.develop/build/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./.develop/build/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./:/var/www/html/moneylover
-      - ./.develop/build/nginx/ssl/certs/nginx-selfsigned.crt:/etc/ssl/server.crt
-      - ./.develop/build/nginx/ssl/private/nginx-selfsigned.key:/etc/ssl/server.key
-      - ./.develop/build/nginx/.htpasswd:/etc/nginx/.htpasswd
-    ports:
-      - "3000:80"
-      - "443:443"
-    links:
-      - php-fpm
-  mysql:
-    image: mysql:5.7.25
-    volumes:
-      - ./.develop/build/database:/var/lib/mysql
-    ports:
-      - "3696:3306"
-    environment:
-      - MYSQL_DATABASE=docker
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=sun1234
+    application:
+        container_name: gmt_application
+        image: debian
+        volumes:
+            - ./:/var/www/laravel
+    workspace:
+        container_name: gmt_workspace
+        restart: always
+        image: kenini1805/laravel-workspace
+        volumes_from:
+            - application
+        tty: true
+    php-fpm:
+        container_name: gmt_php-fpm
+        restart: always
+        image: kenini1805/laravel-php-fpm
+        volumes_from:
+            - application
+        expose:
+            - "9000"
+        links:
+            - workspace
+    nginx:
+        container_name: gmt_nginx
+        restart: always
+        image: framgia/laravel-nginx
+        volumes_from:
+            - data
+            - logs
+            - application
+        ports:
+            - "80:80"
+        links:
+            - php-fpm
+    data:
+        container_name: gmt_data
+        image: debian
+        volumes:
+            - .docker/mysql:/var/lib/mysql
+            - .docker/data:/data
+    data_test:
+        container_name: gmt_data_test
+        image: debian
+        volumes:
+            - .docker/mysql_test:/var/lib/mysql
+            - .docker/data_test:/data
+    logs:
+        container_name: gmt_logs
+        image: debian
+        volumes:
+            - .docker/logs/nginx:/var/log/nginx
+            - .docker/logs/mongodb:/var/log/mongodb
+    mysql:
+        container_name: gmt_mysql
+        restart: always
+        image: mysql:5.7
+        volumes_from:
+            - data
+            - logs
+        expose:
+            - "3306"
+        environment:
+            MYSQL_DATABASE: gmt
+            MYSQL_USER: root
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
+            

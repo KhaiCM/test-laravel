@@ -52,10 +52,10 @@
                         <select name="role_id" class="browser-default custom-select">
                             @foreach ($roleList as $item)
                             <option 
-                            @if ($item->id == $user->role->first()->id)
+                            @if (!empty($user->role->first()) && $item->id == $user->role->first()->id)
                             selected="selected"
                             @endif
-                            value="{{ $item->id}}">{{ $item->name}}</option>
+                            value="{{ $item->id}}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
