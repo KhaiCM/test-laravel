@@ -20,7 +20,8 @@ use Mockery as m;
 use App\Repo\MenuRepository;
 use Illuminate\Support\Facades\Validator;
 use Gate;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class MenuControllerTest extends TestCase
 {
@@ -36,7 +37,8 @@ class MenuControllerTest extends TestCase
     protected function setUp(): void
     {
     	$this->afterApplicationCreated(function () {
-    		$this->menuRepoMock = m::mock(MenuRepository::class);
+            $this->menuRepoMock = m::mock(MenuRepository::class);
+            // $this->menuPolicyMock = m::mock(MenuPolicy::class);
     	});
 
     	parent::setUp();
@@ -46,9 +48,7 @@ class MenuControllerTest extends TestCase
     {
     	$controller = new MenuController($this->menuRepoMock);
 
-    	$this->menuRepoMock->shouldReceive('getList')
-    	->once()
-    	->andReturn(true);
+    	$this->menuRepoMock->shouldReceive('getList')->once()->andReturn(true);
     	$view = $controller->index();
 
     	$this->assertEquals('menu.index', $view->getName());
@@ -57,45 +57,49 @@ class MenuControllerTest extends TestCase
 
     public function test_create_return_view()
     {
-    	$controller = app()->make(MenuController::class, [
-            $this->menuRepoMock,
-        ]);
-
-    	$view = $controller->create();
-    	$this->assertEquals('menu.create', $view->getName());
+        $controller = new MenuController($this->menuRepoMock);
+        $view = $controller->create();
+        // Auth::setUser($user = m::mock(User::class));
+        // $user->shouldReceive('create')->endReturn(true);
+        // $authMock = m::mock('Illuminate\Auth\Manager');
+        // $authMock->shouldReceive('check')->once()->andReturn(true);
+        // $menuPolicy = m::mock(MenuPolicy::class);
+        // $menuPolicy->shouldReceive('create')->once()->andReturn(true);
+        // $menuPolicy->shouldReceive('create')->once()->andReturn(true);
+        $this->assertEquals('menu.create', $view->getName());
     }
 
-    // public function test_create_menu_success()
-    // {
-    // 	$request = new CreateMenuRequest();
-    // 	$data = [
-    // 		'name' => 'name menu',
-    // 		'link' => 'testurl.com',
-    // 		'type' => 1,
-    // 		'order' => null,
-    // 	];
-    // 	$request->headers->set('Content-Type', 'application/json');
-    // 	$request->setJson(new ParameterBag($data));
+    public function test_create_menu_success()
+    {
+    	$request = new CreateMenuRequest();
+    	$data = [
+    		'name' => 'name menu',
+    		'link' => 'testurl.com',
+    		'type' => 1,
+    		'order' => null,
+    	];
+    	$request->headers->set('Content-Type', 'application/json');
+    	$request->setJson(new ParameterBag($data));
 
-    // 	$this->menuRepoMock->shouldReceive('create')->once()->andReturn(true);
+    	$this->menuRepoMock->shouldReceive('create')->once()->andReturn(true);
 
-    // 	$MenuController = new MenuController($this->menuRepoMock);
-    // 	$redirectResponse = $MenuController->store($request);
+    	$MenuController = new MenuController($this->menuRepoMock);
+    	$redirectResponse = $MenuController->store($request);
 
-    // 	$this->assertEquals(route('menu.index'), $redirectResponse->headers->get('location'));
-    // }
+    	$this->assertEquals(route('menu.index'), $redirectResponse->headers->get('location'));
+    }
 
-    // public function test_edit_return_view()
-    // {
-    // 	$editSetting = factory(Menu::class)->make();
-    // 	$id = '1';  
-    // 	$this->menuRepoMock->shouldReceive('getViewEdit')->once()->andReturn(true);
-    // 	$menuController = new MenuController($this->menuRepoMock);
-    // 	$view = $menuController->edit($id);
-    // 	$this->assertEquals('menu.edit', $view->getName());
+    public function test_edit_return_view()
+    {
+    	$editMenu = factory(Menu::class)->make([
+            'id' => 1,
+        ]);
+    	$this->menuRepoMock->shouldReceive('getViewEdit')->once()->andReturn(true);
+    	$menuController = new MenuController($this->menuRepoMock);
+    	$view = $menuController->edit($editMenu->id);
+    	$this->assertEquals('menu.edit', $view->getName());
 
-    // }
-
+    }
     /**
      * @test
 
@@ -109,28 +113,23 @@ class MenuControllerTest extends TestCase
     		'order' => null,
     	];
     	$id = '1';
-    	$request->headers->set('content-type', 'aff');
+    	$request->headers->set('content-Type', 'application/json');
     	$request->setJson(new ParameterBag($data));
-        // $this->expectException(ValidationException::class);
-        // $this->assertSessionHasErrors();
-
-    	// $rules = $request->rules();
-    	// $messages = $request->messages();
-    	// $attributes = $request->attributes();
-    	// $validator = Validator::make($data, $rules, $messages, $attributes);
-        // dd($validator->errors());
-    	// $fails = $validator->fails();
-    	// $this->assertEquals(true, $fails);
-
     	$this->menuRepoMock->shouldReceive('updateMenu')->once()->andReturn(true);
-
     	$menuController = new menuController($this->menuRepoMock);
-        // dd($request);
     	$response = $menuController->update($request, $id);
-        // dd($response);
-
     	$this->assertInstanceOf(RedirectResponse::class, $response);
     	$this->assertEquals($response->getSession()->get('success'), __('messages.success_update_menu'));
     }
 
+    public function test_destroy_menu_sucess()
+    {
+        $destroy = factory(Menu::class)->make([
+            'id' => 1,
+        ]);
+        $this->menuRepoMock->shouldReceive('deleteMenu')->once()->andReturn(true);
+        $menuController = new MenuController($this->menuRepoMock);
+        $response = $menuController->destroy($destroy->id);
+        $this->assertEquals(route('menu.index'), $response->headers->get('Location'));
+    }
 }

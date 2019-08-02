@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Menu;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Traits\HasPermission;
 
 class MenuPolicy
 {
@@ -42,7 +43,7 @@ class MenuPolicy
      */
     public function create(User $user)
     {
-        dd(222222222222);
+        // dd(222222222222);
         return $user->hasPermission('create_menu');
     }
 
