@@ -38,7 +38,8 @@ class MenuController extends Controller
      */
     public function create()
     {
-        $this->authorize('create-menu');
+        // dd(1111);
+        // $this->authorize('create-menu');
         return view('menu.create');
     }
 
@@ -50,7 +51,7 @@ class MenuController extends Controller
      */
     public function store(CreateMenuRequest $request)
     {
-        $this->authorize('create-menu');
+        // $this->authorize('create-menu');
         // if (!\Auth::user()->can('create', \App\Models\Menu::class))
         //     abort(403);
         $this->menuRepository->create($request->all());
@@ -77,8 +78,7 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-         $this->authorize('update', $menu);
-
+        //  $this->authorize('update', $menu);
         $menu = $this->menuRepository->getViewEdit($menu);
 
         return view('menu.edit', ['menu' => $menu]);
@@ -108,6 +108,6 @@ class MenuController extends Controller
     {
         $menu = $this->menuRepository->deleteMenu($id);
 
-        return redirect()->back()->with('success', __('messages.success_delete_menu'));
+        return redirect()->route('menu.index')->with('success', __('messages.success_delete_menu'));
     }
 }
