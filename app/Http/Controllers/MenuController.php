@@ -51,7 +51,7 @@ class MenuController extends Controller
      */
     public function store(CreateMenuRequest $request)
     {
-        // $this->authorize('create-menu');
+        $this->authorize('create-menu');
         // if (!\Auth::user()->can('create', \App\Models\Menu::class))
         //     abort(403);
         $this->menuRepository->create($request->all());

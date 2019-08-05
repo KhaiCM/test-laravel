@@ -58,8 +58,10 @@ class MenuControllerTest extends TestCase
     public function test_create_return_view()
     {
         $controller = new MenuController($this->menuRepoMock);
+        $a = Auth::setUser($user = m::mock(User::class));
+        dd($a);
         $view = $controller->create();
-        // Auth::setUser($user = m::mock(User::class));
+
         // $user->shouldReceive('create')->endReturn(true);
         // $authMock = m::mock('Illuminate\Auth\Manager');
         // $authMock->shouldReceive('check')->once()->andReturn(true);
@@ -89,17 +91,17 @@ class MenuControllerTest extends TestCase
     	$this->assertEquals(route('menu.index'), $redirectResponse->headers->get('location'));
     }
 
-    public function test_edit_return_view()
-    {
-    	$editMenu = factory(Menu::class)->make([
-            'id' => 1,
-        ]);
-    	$this->menuRepoMock->shouldReceive('getViewEdit')->once()->andReturn(true);
-    	$menuController = new MenuController($this->menuRepoMock);
-    	$view = $menuController->edit($editMenu->id);
-    	$this->assertEquals('menu.edit', $view->getName());
+    // public function test_edit_return_view()
+    // {
+    // 	$editMenu = factory(Menu::class)->make([
+    //         'id' => 1,
+    //     ]);
+    // 	$this->menuRepoMock->shouldReceive('getViewEdit')->once()->andReturn(true);
+    // 	$menuController = new MenuController($this->menuRepoMock);
+    // 	$view = $menuController->edit($editMenu->id);
+    // 	$this->assertEquals('menu.edit', $view->getName());
 
-    }
+    // }
     /**
      * @test
 
