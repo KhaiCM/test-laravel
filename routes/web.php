@@ -13,7 +13,7 @@
 
 Route::get('/', 'IndexController@index');
 
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'admin.login'], function () {
 
 	Route::resource('setting', 'SettingController');
 	Route::resource('social', 'SocialController');
